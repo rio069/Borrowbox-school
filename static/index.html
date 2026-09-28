@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BorrowBox — Don’t buy it. Borrow it.</title>
+  
+  <!-- Plus Jakarta Sans Font & Tailwind CDN (Tailwind loaded safely for utility classes) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  <style>
+    /* Responsive Layout Helpers */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: #FFFFFF;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 40;
+    }
+    .main-viewport {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .top-navbar {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .content-area {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none !important;
+      }
+      .content-area {
+        padding: 1rem;
+      }
+      .top-navbar {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+<body class="pb-mobile-nav">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <div class="app-layout">
+    
+    <!-- DESKTOP LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <!-- Brand Logo -->
+      <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #2563EB 0%, #10B981 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);">
+          📦
+        </div>
+        <div>
+          <div style="font-weight: 800; font-size: 1.15rem; color: #0F172A; letter-spacing: -0.02em;">BorrowBox</div>
+          <div style="font-size: 0.7rem; font-weight: 700; color: #10B981; letter-spacing: 0.05em; text-transform: uppercase;">Authpur Network</div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav style="padding: 1rem 0.75rem; flex: 1; display: flex; flex-direction: column; gap: 0.3rem;">
+        <button class="tab-btn active" data-nav-view="home" onclick="switchView('home')" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem;">
+          <span style="font-size: 1.1rem;">🏠</span> <span>Home Dashboard</span>
+        </button>
+        <button class="tab-btn" data-nav-view="discover" onclick="switchView('discover')" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem;">
+          <span style="font-size: 1.1rem;">🔎</span> <span>Discover Items</span>
+        </button>
+        <button class="tab-btn" data-nav-view="list" onclick="switchView('list')" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem;">
+          <span style="font-size: 1.1rem;">➕</span> <span>List an Item</span>
+        </button>
+        <button class="tab-btn" data-nav-view="skills" onclick="switchView('skills')" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem;">
+          <span style="font-size: 1.1rem;">🤝</span> <span>Skill Swap</span>
+        </button>
+        <button class="tab-btn" data-nav-view="activity" onclick="switchView('activity')" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem;">
+          <span style="font-size: 1.1rem;">📋</span> <span>My BorrowBox</span>
+        </button>
+        <button class="tab-btn" data-nav-view="impact" onclick="switchView('impact')" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem;">
+          <span style="font-size: 1.1rem;">🌱</span> <span>Impact Analytics</span>
+        </button>
+        <button class="tab-btn" data-nav-view="profile" onclick="switchView('profile')" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem;">
+          <span style="font-size: 1.1rem;">👤</span> <span>Profile & Switch User</span>
+        </button>
+
+        <!-- Admin Only View -->
+        <button class="tab-btn admin-nav-item" data-nav-view="admin" onclick="switchView('admin')" style="display: none; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem; color: #7C3AED; background: #F5F3FF;">
+          <span style="font-size: 1.1rem;">🛡️</span> <span>School Admin</span>
+        </button>
+
+        <div style="margin: 0.5rem 0; border-top: 1px solid var(--border-color);"></div>
+
+        <button class="tab-btn" data-nav-view="pitch" onclick="switchView('pitch')" style="display: flex; align-items: center; gap: 0.75rem; width: 100%; text-align: left; padding: 0.75rem 1rem; color: #2563EB;">
+          <span style="font-size: 1.1rem;">🚀</span> <span>Venture Pitch Deck</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer: School Info & Security Badge -->
+      <div style="padding: 1rem; border-top: 1px solid var(--border-color); background: #F8FAFC;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+          <span style="color: var(--accent); font-size: 0.9rem;">🔒</span>
+          <span style="font-weight: 700; font-size: 0.8rem; color: #0F172A;">Closed School Network</span>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.35;">
+          Only verified <strong style="color: #334155;">@authpurmodel.edu</strong> students and faculty can access listings.
+        </p>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEWPORT -->
+    <div class="main-viewport">
+      
+      <!-- TOP NAVBAR -->
+      <header class="top-navbar nav-glass">
+        <!-- Left: School Badge & Mobile Brand -->
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;" onclick="openVerificationModal()" role="button" tabindex="0" title="Click for verification details">
+            <span class="badge badge-emerald" style="cursor: pointer; display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; font-size: 0.75rem;">
+              <span>🛡️</span>
+              <span class="hidden sm:inline">Authpur National Model School</span>
+              <span style="opacity: 0.8;">• Verified</span>
+            </span>
+          </div>
+
+          <!-- Signature "Need It Once?" Prompt Button -->
+          <button class="btn-secondary" onclick="openNudgeModal()" style="font-size: 0.8rem; padding: 0.35rem 0.8rem; border-color: #93C5FD; color: #1D4ED8; background: #EFF6FF;">
+            💡 Need It Once?
+          </button>
+        </div>
+
+        <!-- Right: Actions & Persona Switcher -->
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          
+          <!-- Demo Persona Switcher Dropdown -->
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;" class="hidden md:inline">Persona:</span>
+            <select id="persona-switcher" onchange="switchPersona(this.value)" 
+                    style="font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.6rem; border-radius: 10px; border: 1px solid var(--border-color); background: #FFFFFF; color: #0F172A; cursor: pointer; outline: none;">
+              <!-- Populated dynamically via JS -->
+            </select>
+          </div>
+
+          <!-- Notification Bell -->
+          <div style="position: relative;">
+            <button id="notif-bell-btn" onclick="toggleNotificationDropdown()" 
+                    style="width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border-color); background: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; position: relative;">
+              🔔
+              <span id="notif-badge" style="display: none; position: absolute; top: -4px; right: -4px; background: #EF4444; color: white; border-radius: 9999px; font-size: 0.65rem; font-weight: 800; min-width: 16px; height: 16px; align-items: center; justify-content: center; padding: 0 3px;">
+                0
+              </span>
+            </button>
+
+            <!-- Notification Dropdown -->
+            <div id="notif-dropdown" style="display: none; position: absolute; right: 0; top: 44px; width: 320px; background: #FFFFFF; border-radius: 14px; box-shadow: var(--shadow-xl); border: 1px solid var(--border-color); z-index: 100; overflow: hidden;">
+              <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #F1F5F9; font-weight: 700; font-size: 0.85rem; color: #0F172A; display: flex; justify-content: space-between; align-items: center;">
+                <span>Notifications</span>
+                <span class="badge badge-blue">Real-time</span>
+              </div>
+              <div id="notif-list" style="max-height: 280px; overflow-y: auto;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Profile Avatar & New Button -->
+          <button onclick="openCreateProfileModal()" class="btn-primary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem; white-space: nowrap;" title="Create New Student Profile">
+            + Profile
+          </button>
+          <img id="header-user-avatar" onclick="switchView('profile')" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; cursor: pointer; border: 2px solid var(--primary); transition: transform 0.15s ease;" title="Click to View / Edit Profile" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+
+          <!-- Reset Demo Button -->
+          <button onclick="handleResetDemo()" class="btn-secondary" title="Reset Demo Data" style="padding: 0.4rem 0.7rem; font-size: 0.8rem;">
+            ↺ Reset
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEW CONTAINER -->
+      <main class="content-area">
+
+        <!-- ================= VIEW 1: HOME DASHBOARD ================= -->
+        <section id="view-home" class="view-section">
+          
+          <!-- Venture Pitch Banner -->
+          <div style="background: linear-gradient(135deg, #1E40AF 0%, #2563EB 60%, #10B981 100%); border-radius: 16px; padding: 1.5rem 1.75rem; color: white; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem;">
+                <span class="badge badge-emerald" style="background: rgba(16, 185, 129, 0.25); color: #A7F3D0; border: 1px solid rgba(16, 185, 129, 0.4);">Venture Demo Ready</span>
+                <span style="font-size: 0.8rem; opacity: 0.9;">Competition Showcase</span>
+              </div>
+              <h2 style="font-size: 1.4rem; font-weight: 800; letter-spacing: -0.01em;">Don’t buy it. Borrow it.</h2>
+              <p style="font-size: 0.9rem; opacity: 0.9; max-width: 520px; line-height: 1.4; margin-top: 0.25rem;">
+                BorrowBox is Authpur National Model School’s closed student sharing network. Borrow scientific calculators, textbooks, lab equipment, and swap skills safely on campus.
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn-secondary" style="background: white; color: #1E40AF; border: none; font-size: 0.85rem;" onclick="switchView('pitch')">
+                View Pitch Deck →
+              </button>
+              <button class="btn-accent" style="font-size: 0.85rem;" onclick="switchView('discover')">
+                Explore Items
+              </button>
+            </div>
+          </div>
+
+          <!-- Hero Greeting & Search Bar -->
+          <div style="margin-bottom: 1.5rem;">
+            <h1 style="font-size: 1.5rem; font-weight: 800; color: #0F172A; margin-bottom: 0.25rem;">
+              Good morning, <span id="home-greeting-name" style="color: var(--primary);">Student</span>!
+            </h1>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+              What do you need for class or projects today?
+            </p>
+
+            <!-- Search Bar -->
+            <div style="display: flex; gap: 0.75rem; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 0.5rem 0.75rem; box-shadow: var(--shadow-sm); align-items: center;">
+              <span style="font-size: 1.25rem; color: var(--text-muted); padding-left: 0.25rem;">🔎</span>
+              <input type="text" id="home-search-input" 
+                     placeholder="Search Casio calculator, Physics book, Arduino kit, lab coat..." 
+                     style="border: none; outline: none; flex: 1; font-size: 0.95rem; font-family: inherit; color: #0F172A;"
+                     onkeydown="if(event.key === 'Enter') { handleSearch(this.value); switchView('discover'); }">
+              <button class="btn-primary" style="padding: 0.5rem 1.15rem; font-size: 0.9rem;" 
+                      onclick="const val = document.getElementById('home-search-input').value; handleSearch(val); switchView('discover');">
+                Search
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.75rem;">
+            <div class="app-card app-card-interactive" onclick="switchView('discover')" style="padding: 1rem; text-align: center;">
+              <div style="font-size: 1.75rem; margin-bottom: 0.25rem;">🔎</div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: #0F172A;">Find Items</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Borrow on campus</div>
+            </div>
+            <div class="app-card app-card-interactive" onclick="switchView('list')" style="padding: 1rem; text-align: center;">
+              <div style="font-size: 1.75rem; margin-bottom: 0.25rem;">📦</div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: #0F172A;">List an Item</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Lend or donate</div>
+            </div>
+            <div class="app-card app-card-interactive" onclick="switchView('skills')" style="padding: 1rem; text-align: center;">
+              <div style="font-size: 1.75rem; margin-bottom: 0.25rem;">🤝</div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: #0F172A;">Skill Swap</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Trade knowledge</div>
+            </div>
+            <div class="app-card app-card-interactive" onclick="switchView('activity')" style="padding: 1rem; text-align: center;">
+              <div style="font-size: 1.75rem; margin-bottom: 0.25rem;">📋</div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: #0F172A;">My Borrowings</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Active loans & due dates</div>
+            </div>
+          </div>
+
+          <!-- Dynamic Community Impact Widget -->
+          <div class="app-card" style="padding: 1.5rem; margin-bottom: 2rem; background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: #0F172A; display: flex; align-items: center; gap: 0.5rem;">
+                  <span>🌱</span> Authpur National Model School Community Impact
+                </h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Real-time sustainability metrics verified across campus exchanges</p>
+              </div>
+              <span class="badge badge-emerald">Live School Metrics</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem;">
+              <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; text-align: center;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Items Reused</div>
+                <div class="impact-items-reused" style="font-size: 1.75rem; font-weight: 800; color: var(--primary); margin: 0.25rem 0;">1,248</div>
+                <div style="font-size: 0.75rem; color: #10B981; font-weight: 600;">Kept in active use</div>
+              </div>
+              <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; text-align: center;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Student Money Saved</div>
+                <div class="impact-money-saved" style="font-size: 1.75rem; font-weight: 800; color: var(--accent); margin: 0.25rem 0;">₹2.4L</div>
+                <div style="font-size: 0.75rem; color: #10B981; font-weight: 600;">Pocket money saved</div>
+              </div>
+              <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; text-align: center;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Safe Exchanges</div>
+                <div class="impact-exchanges-count" style="font-size: 1.75rem; font-weight: 800; color: #0F172A; margin: 0.25rem 0;">1,248</div>
+                <div style="font-size: 0.75rem; color: var(--primary); font-weight: 600;">100% verified safely</div>
+              </div>
+              <div style="background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; text-align: center;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Waste Avoided</div>
+                <div class="impact-waste-avoided" style="font-size: 1.75rem; font-weight: 800; color: #D97706; margin: 0.25rem 0;">384 kg</div>
+                <div style="font-size: 0.75rem; color: #10B981; font-weight: 600;">Prevented from landfill</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Popular in Your School Carousel -->
+          <div style="margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+              <div>
+                <h3 style="font-size: 1.2rem; font-weight: 800; color: #0F172A;">Popular in Authpur</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">High-demand items available from verified classmates</p>
+              </div>
+              <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;" onclick="switchView('discover')">
+                View All →
+              </button>
+            </div>
+
+            <!-- Horizontal Scroll Cards Container -->
+            <div id="popular-items-scroll" class="no-scrollbar" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.75rem;">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Skill Swap Preview Card -->
+          <div class="app-card" style="padding: 1.25rem 1.5rem; margin-bottom: 2rem; border-left: 5px solid var(--accent);">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 0.25rem;">
+              🤝 Campus Skill Swap Spotlight
+            </div>
+            <div id="home-skill-preview">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ================= VIEW 2: DISCOVER MARKETPLACE ================= -->
+        <section id="view-discover" class="view-section" style="display: none;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h1 style="font-size: 1.5rem; font-weight: 800; color: #0F172A;">School Sharing Marketplace</h1>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Verified items available for borrowing or donation across Authpur National Model School</p>
+            </div>
+            <button class="btn-primary" onclick="switchView('list')">
+              ➕ List an Item
+            </button>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="app-card" style="padding: 1rem; margin-bottom: 1.25rem;">
+            <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 240px; position: relative;">
+                <input type="text" id="search-input" placeholder="Search title, category, description..." 
+                       oninput="handleSearch(this.value)"
+                       style="width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+              </div>
+              <select onchange="state.selectedCondition = this.value; loadItems();" 
+                      style="padding: 0.65rem 0.75rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+                <option value="All">All Conditions</option>
+                <option value="Like New">Like New</option>
+                <option value="Excellent">Excellent</option>
+                <option value="Good">Good</option>
+              </select>
+              <button class="btn-secondary" onclick="resetFilters()" style="font-size: 0.85rem; padding: 0.5rem 0.85rem;">
+                Reset
+              </button>
+            </div>
+
+            <!-- Category Chips -->
+            <div id="category-chips-container" class="no-scrollbar" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.25rem;">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Items Grid -->
+          <div id="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem;">
+            <!-- Rendered via JS -->
+          </div>
+        </section>
+
+        <!-- ================= VIEW 3: LIST AN ITEM ================= -->
+        <section id="view-list" class="view-section" style="display: none;">
+          <div style="max-width: 680px; margin: 0 auto;">
+            <div style="margin-bottom: 1.5rem;">
+              <h1 style="font-size: 1.5rem; font-weight: 800; color: #0F172A;">List an Item to Share</h1>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">
+                Help a classmate, reduce waste, and build your school trust score.
+              </p>
+            </div>
+
+            <!-- "Need It Once?" Nudge Callout inside Listing -->
+            <div class="nudge-box" style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+              <div>
+                <div style="font-weight: 700; font-size: 0.9rem; color: #1E40AF;">💡 Listing tip: Lending vs Permanent Gift?</div>
+                <div style="font-size: 0.8rem; color: #334155; margin-top: 0.15rem;">
+                  Lend items for temporary class projects (1-14 days), or mark as a permanent donation for items you no longer need!
+                </div>
+              </div>
+            </div>
+
+            <form class="app-card" style="padding: 1.75rem;" onsubmit="handleCreateItem(event)">
+              
+              <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                  Item Title *
+                </label>
+                <input type="text" id="list-title" required placeholder="e.g., Casio FX-991ES Plus Scientific Calculator"
+                       style="width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                    Category *
+                  </label>
+                  <select id="list-category" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+                    <option value="Study Equipment">Study Equipment</option>
+                    <option value="Books">Books & Reference</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Project Tools">Project Tools</option>
+                    <option value="Art Supplies">Art Supplies</option>
+                    <option value="Sports">Sports Equipment</option>
+                    <option value="School Supplies">School Supplies</option>
+                    <option value="Costumes">Costumes & Drama</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                    Condition *
+                  </label>
+                  <select id="list-condition" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+                    <option value="Like New">Like New (Mint)</option>
+                    <option value="Excellent" selected>Excellent</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                  Description & Notes for Peers *
+                </label>
+                <textarea id="list-description" rows="3" required placeholder="Include details like battery status, edition, parts included, etc."
+                          style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem; resize: none;"></textarea>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                    Listing Type *
+                  </label>
+                  <select id="list-item-type" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+                    <option value="loan">Lending (Borrow & Return)</option>
+                    <option value="donation">Permanent Donation (Free Keep)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                    Max Borrow Duration
+                  </label>
+                  <select id="list-duration" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+                    <option value="3">3 Days (Exams/Testing)</option>
+                    <option value="7" selected>7 Days (Standard 1 week)</option>
+                    <option value="14">14 Days (Two weeks)</option>
+                    <option value="30">30 Days (Full Month)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                    Refundable Deposit (₹)
+                  </label>
+                  <input type="number" id="list-deposit" min="0" step="50" value="0" placeholder="0 for Free"
+                         style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                    Approved School Drop-off Point *
+                  </label>
+                  <select id="list-location" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+                    <option value="School Library Desk">School Library Desk</option>
+                    <option value="Main Reception Desk">Main Reception Desk</option>
+                    <option value="Student Activity Room">Student Activity Room</option>
+                    <option value="Science Lab Counter 2">Science Lab Counter 2</option>
+                    <option value="Athletics Equipment Office">Athletics Equipment Office</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+                  Photo Image URL
+                </label>
+                <input type="url" id="list-image-url" placeholder="https://images.unsplash.com/..." value="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600"
+                       style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+              </div>
+
+              <button type="submit" class="btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem;">
+                Publish Listing in Authpur Network
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 4: SKILL SWAP MODULE ================= -->
+        <section id="view-skills" class="view-section" style="display: none;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h1 style="font-size: 1.5rem; font-weight: 800; color: #0F172A;">🤝 Campus Skill Swap</h1>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Trade skills, homework help, and tutoring without exchanging money.</p>
+            </div>
+            <button class="btn-primary" onclick="openCreateSkillModal()">
+              ➕ Offer a Skill
+            </button>
+          </div>
+
+          <div id="skills-list-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
+            <!-- Rendered via JS -->
+          </div>
+        </section>
+
+        <!-- ================= VIEW 5: ACTIVITY / MY BORROWBOX ================= -->
+        <section id="view-activity" class="view-section" style="display: none;">
+          <div style="margin-bottom: 1.25rem;">
+            <h1 style="font-size: 1.5rem; font-weight: 800; color: #0F172A;">My BorrowBox</h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Manage your active loans, lent items, safe exchange verification codes, and requests.</p>
+          </div>
+
+          <!-- Tab Bar -->
+          <div style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; overflow-x: auto;" class="no-scrollbar">
+            <button class="tab-btn activity-tab-btn active" data-tab="borrowing" onclick="setActivityTab('borrowing')">
+              🎒 Borrowing (Active)
+            </button>
+            <button class="tab-btn activity-tab-btn" data-tab="lending" onclick="setActivityTab('lending')">
+              🤝 Lending Out
+            </button>
+            <button class="tab-btn activity-tab-btn" data-tab="requests" onclick="setActivityTab('requests')">
+              📬 Requests
+            </button>
+            <button class="tab-btn activity-tab-btn" data-tab="history" onclick="setActivityTab('history')">
+              📜 History & Impact
+            </button>
+          </div>
+
+          <!-- Tab Contents -->
+          <div id="tab-content-borrowing" class="activity-tab-content"></div>
+          <div id="tab-content-lending" class="activity-tab-content" style="display: none;"></div>
+          <div id="tab-content-requests" class="activity-tab-content" style="display: none;"></div>
+          <div id="tab-content-history" class="activity-tab-content" style="display: none;"></div>
+        </section>
+
+        <!-- ================= VIEW 6: IMPACT & ANALYTICS ================= -->
+        <section id="view-impact" class="view-section" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <h1 style="font-size: 1.5rem; font-weight: 800; color: #0F172A;">Impact & Recognition</h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              Track your individual sustainability footprint and collective Authpur National Model School achievements.
+            </p>
+          </div>
+
+          <!-- Personal Impact Card -->
+          <div id="personal-impact-container"></div>
+
+          <!-- School Collective Achievement -->
+          <div class="app-card" style="padding: 1.75rem; background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%); color: white;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <span class="badge badge-emerald" style="background: rgba(16, 185, 129, 0.25); color: #A7F3D0;">Authpur Milestone</span>
+                <h3 style="font-size: 1.35rem; font-weight: 800; margin-top: 0.25rem;">Target: 2,000 Items Reused by Semester End</h3>
+              </div>
+              <div style="font-size: 1.5rem; font-weight: 800;">62.4%</div>
+            </div>
+
+            <div class="progress-track" style="height: 12px; background: rgba(255,255,255,0.25); margin-bottom: 1rem;">
+              <div class="progress-fill" style="width: 62.4%; background: #10B981;"></div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; opacity: 0.9;">
+              <span>Current: 1,248 Items Reused</span>
+              <span>752 items left to unlock School Green Campus Trophy 🏆</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 7: SCHOOL ADMIN DASHBOARD ================= -->
+        <section id="view-admin" class="view-section" style="display: none;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="badge badge-purple">Faculty / Administrator Mode</span>
+              </div>
+              <h1 style="font-size: 1.5rem; font-weight: 800; color: #0F172A; margin-top: 0.2rem;">Authpur National Model School Administration</h1>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Manage approved school exchange desks, moderate listings, and export sustainability audits.</p>
+            </div>
+            <button class="btn-primary" onclick="generateSustainabilityReport()">
+              📄 Export Sustainability Report
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            
+            <!-- Moderation / Reports Column -->
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin-bottom: 0.75rem;">
+                🚨 Student Moderation & Flagged Reports
+              </h3>
+              <div id="admin-reports-container"></div>
+            </div>
+
+            <!-- Approved Exchange Points Management Column -->
+            <div>
+              <h3 style="font-size: 1.1rem; font-weight: 800; color: #0F172A; margin-bottom: 0.75rem;">
+                📍 School-Approved Exchange Points
+              </h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Only staff-supervised locations can be selected by students to ensure 100% campus safety.
+              </p>
+
+              <form onsubmit="handleAddLocation(event)" style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <input type="text" id="new-location-input" placeholder="e.g., Robotics Lab Desk" required
+                       style="flex: 1; padding: 0.6rem 0.8rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem;">
+                <button type="submit" class="btn-primary" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
+                  Add Point
+                </button>
+              </form>
+
+              <div id="admin-locations-container"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ================= VIEW 8: VENTURE PITCH DECK ================= -->
+        <section id="view-pitch" class="view-section" style="display: none;">
+          <div style="max-width: 840px; margin: 0 auto;">
+            
+            <div style="text-align: center; margin-bottom: 2rem;">
+              <span class="badge badge-blue" style="font-size: 0.85rem; padding: 0.4rem 1rem; margin-bottom: 0.5rem;">
+                Venture Capital & School Board Deck
+              </span>
+              <h1 style="font-size: 2.25rem; font-weight: 800; color: #0F172A; letter-spacing: -0.02em;">
+                BorrowBox: The Closed School Sharing Economy
+              </h1>
+              <p style="font-size: 1.1rem; color: var(--text-muted); max-width: 580px; margin: 0.5rem auto 1.5rem auto;">
+                "Don’t buy it. Borrow it." Eliminating \$1.2B in single-use student equipment waste while fostering campus trust.
+              </p>
+              <div style="display: flex; justify-content: center; gap: 0.75rem;">
+                <button class="btn-primary" onclick="switchView('discover')">Launch Live Interactive App</button>
+                <button class="btn-secondary" onclick="openNudgeModal()">Test 'Need It Once?' Feature</button>
+              </div>
+            </div>
+
+            <!-- Pitch Slide 1: The Problem -->
+            <div class="app-card" style="padding: 1.75rem; margin-bottom: 1.5rem; border-left: 6px solid #EF4444;">
+              <div style="font-size: 0.75rem; font-weight: 800; color: #EF4444; text-transform: uppercase;">01 • The Problem</div>
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0.35rem 0 0.75rem 0;">Students Overspend on Short-Term Equipment</h3>
+              <p style="color: #475569; font-size: 0.95rem; line-height: 1.6;">
+                Every semester, students buy expensive graphing calculators (₹2,500+), reference textbooks, lab coats, and project kits used for only 2 to 3 weeks of exams. These items end up gathering dust in school lockers, parents overspend, and landfill waste skyrockets.
+              </p>
+            </div>
+
+            <!-- Pitch Slide 2: The Solution -->
+            <div class="app-card" style="padding: 1.75rem; margin-bottom: 1.5rem; border-left: 6px solid var(--accent);">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--accent); text-transform: uppercase;">02 • The Solution</div>
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0.35rem 0 0.75rem 0;">A Verified, Closed-Campus Sharing Platform</h3>
+              <p style="color: #475569; font-size: 0.95rem; line-height: 1.6;">
+                BorrowBox gives Authpur National Model School an internal circular economy. Only verified students with institutional emails (`@authpurmodel.edu`) can enter. Exchanges are secured using 6-digit confirmation codes at supervised campus desks (Library, Reception).
+              </p>
+            </div>
+
+            <!-- Pitch Slide 3: How It Works -->
+            <div class="app-card" style="padding: 1.75rem; margin-bottom: 1.5rem;">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase;">03 • 4-Step Frictionless Workflow</div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div style="background: #F8FAFC; padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                  <div style="font-weight: 800; color: var(--primary); font-size: 1.1rem;">1. Find</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Search calculators, books, lab coats in your school catalog.</div>
+                </div>
+                <div style="background: #F8FAFC; padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                  <div style="font-weight: 800; color: var(--primary); font-size: 1.1rem;">2. Request</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Select loan dates and send a request to classmate.</div>
+                </div>
+                <div style="background: #F8FAFC; padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                  <div style="font-weight: 800; color: var(--primary); font-size: 1.1rem;">3. Exchange</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Meet at Library Desk and verify 6-digit code.</div>
+                </div>
+                <div style="background: #F8FAFC; padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                  <div style="font-weight: 800; color: var(--primary); font-size: 1.1rem;">4. Return</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">Drop off item, confirm receipt, and boost Trust Score!</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pitch Slide 4: Business Model -->
+            <div class="app-card" style="padding: 1.75rem; margin-bottom: 1.5rem; border-left: 6px solid #8B5CF6;">
+              <div style="font-size: 0.75rem; font-weight: 800; color: #8B5CF6; text-transform: uppercase;">04 • Business Model (B2B2C)</div>
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0.35rem 0 0.75rem 0;">School Annual ESG Subscription</h3>
+              <p style="color: #475569; font-size: 0.95rem; line-height: 1.6;">
+                Schools pay an annual sustainability subscription (\$2.50 per student/year) to provide BorrowBox as a licensed campus utility. Schools receive automated ESG reports, accreditation credits, reduced locker waste, and enhanced community trust.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ================= VIEW 9: PROFILE & CAMPUS DIRECTORY ================= -->
+        <section id="view-profile" class="view-section" style="display: none;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h1 style="font-size: 1.5rem; font-weight: 800; color: #0F172A;">Profile & Campus Directory</h1>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Manage your profile, create new student accounts, or switch active campus users.</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn-primary" onclick="openCreateProfileModal()">
+                ➕ Create Profile
+              </button>
+              <button class="btn-secondary" onclick="openEditProfileModal()">
+                ✏️ Edit Profile
+              </button>
+            </div>
+          </div>
+
+          <div id="profile-view-container"></div>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ================= MOBILE STICKY BOTTOM NAVIGATION ================= -->
+  <nav class="bottom-nav-glass md:hidden" style="position: fixed; bottom: 0; left: 0; right: 0; height: 64px; display: flex; align-items: center; justify-content: space-around; z-index: 50;">
+    <button class="tab-btn active" data-nav-view="home" onclick="switchView('home')" style="display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; padding: 0.25rem;">
+      <span style="font-size: 1.3rem;">🏠</span>
+      <span>Home</span>
+    </button>
+    <button class="tab-btn" data-nav-view="discover" onclick="switchView('discover')" style="display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; padding: 0.25rem;">
+      <span style="font-size: 1.3rem;">🔎</span>
+      <span>Discover</span>
+    </button>
+    <button onclick="switchView('list')" style="width: 46px; height: 46px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4); border: none; margin-top: -14px;">
+      ➕
+    </button>
+    <button class="tab-btn" data-nav-view="activity" onclick="switchView('activity')" style="display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; padding: 0.25rem;">
+      <span style="font-size: 1.3rem;">📋</span>
+      <span>Activity</span>
+    </button>
+    <button class="tab-btn" data-nav-view="profile" onclick="switchView('profile')" style="display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; padding: 0.25rem;">
+      <span style="font-size: 1.3rem;">👤</span>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. SIGNATURE "NEED IT ONCE?" MODAL -->
+  <div id="nudge-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" style="max-width: 480px; padding: 1.75rem;">
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <div style="font-size: 2.75rem; margin-bottom: 0.35rem;">💡</div>
+        <h2 style="font-size: 1.35rem; font-weight: 800; color: #0F172A;">Do you actually need to own this?</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          Before you spend money or buy new, consider your actual use case:
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+        <div class="app-card app-card-interactive" onclick="handleNudgeChoice('temporary')" 
+             style="padding: 1rem; border: 2px solid #BFDBFE; background: #EFF6FF; display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.5rem;">⏱️</span>
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: #1E40AF;">I need it temporarily</div>
+            <div style="font-size: 0.75rem; color: #3B82F6;">Borrow for free from a classmate for 3-14 days</div>
+          </div>
+        </div>
+
+        <div class="app-card app-card-interactive" onclick="handleNudgeChoice('own')" 
+             style="padding: 1rem; border: 2px solid #BBF7D0; background: #F0FDF4; display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.5rem;">🎁</span>
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: #166534;">I want to own it</div>
+            <div style="font-size: 0.75rem; color: #15803D;">Browse items marked for permanent donation / keep</div>
+          </div>
+        </div>
+
+        <div class="app-card app-card-interactive" onclick="handleNudgeChoice('unsure')" 
+             style="padding: 1rem; border: 2px solid #E2E8F0; background: #FFFFFF; display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.5rem;">🤔</span>
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: #0F172A;">I'm not sure</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Recommend borrowing for 3 days to test first</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-secondary" style="width: 100%;" onclick="closeNudgeModal()">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. ITEM DETAIL MODAL -->
+  <div id="item-detail-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" id="item-detail-content">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <!-- 3. BORROW REQUEST MODAL -->
+  <div id="borrow-request-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" id="borrow-request-content">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <!-- 4. SAFE EXCHANGE 6-DIGIT CODE MODAL -->
+  <div id="exchange-code-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" id="exchange-code-content" style="max-width: 440px;">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <!-- 5. PROPOSE SKILL MODAL -->
+  <div id="propose-skill-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" id="propose-skill-content" style="max-width: 480px;">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <!-- 6. CREATE SKILL MODAL -->
+  <div id="create-skill-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" style="max-width: 500px; padding: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Offer a Peer Skill</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Share what you can teach and what you want in return.</p>
+        </div>
+        <button onclick="closeCreateSkillModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#94A3B8;">&times;</button>
+      </div>
+
+      <form onsubmit="handleCreateSkill(event)">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+            Skill Title *
+          </label>
+          <input type="text" id="skill-title" required placeholder="e.g. Python Coding Basics (30 mins)"
+                 style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+            What can you teach? (Description) *
+          </label>
+          <textarea id="skill-desc" rows="3" required placeholder="I can walk you through basic syntax, functions, and solving homework questions."
+                    style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem; resize: none;"></textarea>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+            What do you want in exchange? *
+          </label>
+          <input type="text" id="skill-desired" required placeholder="e.g. Guitar Chord Lessons, French practice, etc."
+                 style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+              Duration (Minutes)
+            </label>
+            <input type="number" id="skill-duration" min="15" step="15" value="30"
+                   style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.4rem;">
+              Availability
+            </label>
+            <input type="text" id="skill-availability" value="After school or lunch"
+                   style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn-secondary" style="flex: 1;" onclick="closeCreateSkillModal()">Cancel</button>
+          <button type="submit" class="btn-primary" style="flex: 2;">Publish Skill</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. SCHOOL VERIFICATION INFO MODAL -->
+  <div id="verification-info-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" style="max-width: 480px; padding: 1.75rem;">
+      <div style="text-align: center; margin-bottom: 1.25rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.35rem;">🛡️</div>
+        <h2 style="font-size: 1.35rem; font-weight: 800; color: #0F172A;">Closed School Verification</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          BorrowBox is an authenticated, internal campus network — NOT a public marketplace.
+        </p>
+      </div>
+
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem; font-size: 0.85rem; color: #334155; line-height: 1.5;">
+        <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <li><strong>Domain Restricted:</strong> Only accounts ending in <code>@authpurmodel.edu</code> can join.</li>
+          <li><strong>Supervised Drop-off Points:</strong> Items are only exchanged at staff-monitored campus desks (Library, Reception).</li>
+          <li><strong>6-Digit Exchange Verification:</strong> A temporary one-time code prevents theft and confirms physical handover.</li>
+          <li><strong>Zero Cash Friction:</strong> Built entirely on community trust scores, peer accountability, and optional refundable deposits.</li>
+        </ul>
+      </div>
+
+      <button class="btn-primary" style="width: 100%;" onclick="closeVerificationModal()">
+        Got It
+      </button>
+    </div>
+  </div>
+
+  <!-- 8. EDIT PROFILE MODAL -->
+  <div id="edit-profile-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" style="max-width: 520px; padding: 1.75rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Edit Student Profile</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Update your information for Authpur National Model School</p>
+        </div>
+        <button onclick="closeEditProfileModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#94A3B8;">&times;</button>
+      </div>
+
+      <form onsubmit="handleEditProfile(event)">
+        <!-- Avatar Preview & Preset Selection -->
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; padding: 0.85rem; background: #F8FAFC; border-radius: 12px; border: 1px solid var(--border-color);">
+          <img id="edit-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" 
+               style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); flex-shrink: 0;">
+          <div style="flex: 1;">
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem; text-transform: uppercase;">
+              Pick an Avatar Preset
+            </label>
+            <div id="edit-avatar-presets" style="display: flex; gap: 0.4rem; flex-wrap: wrap;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+            Full Legal / School Name *
+          </label>
+          <input type="text" id="edit-full-name" required
+                 style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+              Display Nickname *
+            </label>
+            <input type="text" id="edit-display-name" required
+                   style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+              Grade / Division *
+            </label>
+            <select id="edit-grade" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+              <option value="Grade 9">Grade 9</option>
+              <option value="Grade 10">Grade 10</option>
+              <option value="Grade 11">Grade 11</option>
+              <option value="Grade 12">Grade 12</option>
+              <option value="Faculty / Admin">Faculty / Admin</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+            School Email Address *
+          </label>
+          <input type="email" id="edit-email" required
+                 style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+            Custom Avatar Image URL
+          </label>
+          <input type="url" id="edit-avatar-url" placeholder="https://..." oninput="document.getElementById('edit-avatar-preview').src = this.value"
+                 style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem;">
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn-secondary" style="flex: 1;" onclick="closeEditProfileModal()">Cancel</button>
+          <button type="submit" class="btn-primary" style="flex: 2;">Save Profile Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 9. CREATE PROFILE MODAL -->
+  <div id="create-profile-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-sheet" style="max-width: 520px; padding: 1.75rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A;">Join Authpur Network</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Create a new verified student profile</p>
+        </div>
+        <button onclick="closeCreateProfileModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#94A3B8;">&times;</button>
+      </div>
+
+      <form onsubmit="handleCreateProfile(event)">
+        <!-- Avatar Preview & Preset Selection -->
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; padding: 0.85rem; background: #F8FAFC; border-radius: 12px; border: 1px solid var(--border-color);">
+          <img id="create-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" 
+               style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0;">
+          <div style="flex: 1;">
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem; text-transform: uppercase;">
+              Choose Your Student Avatar
+            </label>
+            <div id="create-avatar-presets" style="display: flex; gap: 0.4rem; flex-wrap: wrap;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+            Full Name *
+          </label>
+          <input type="text" id="create-full-name" required placeholder="e.g. Rohan Mukherjee"
+                 style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+              Display Name *
+            </label>
+            <input type="text" id="create-display-name" required placeholder="e.g. Rohan M."
+                   style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.9rem;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+              Grade *
+            </label>
+            <select id="create-grade" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+              <option value="Grade 9">Grade 9</option>
+              <option value="Grade 10">Grade 10</option>
+              <option value="Grade 11" selected>Grade 11</option>
+              <option value="Grade 12">Grade 12</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+              Account Role
+            </label>
+            <select id="create-role" style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem; background: white;">
+              <option value="student" selected>Student</option>
+              <option value="school_admin">Faculty / School Admin</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+              School Email
+            </label>
+            <input type="email" id="create-email" placeholder="username@authpurmodel.edu"
+                   style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #0F172A; margin-bottom: 0.35rem;">
+            Custom Avatar Image URL (Optional)
+          </label>
+          <input type="url" id="create-avatar-url" placeholder="https://..." oninput="document.getElementById('create-avatar-preview').src = this.value"
+                 style="width: 100%; padding: 0.65rem; border: 1px solid var(--border-color); border-radius: 10px; font-family: inherit; font-size: 0.85rem;">
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn-secondary" style="flex: 1;" onclick="closeCreateProfileModal()">Cancel</button>
+          <button type="submit" class="btn-primary" style="flex: 2;">Create & Switch to Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openVerificationModal() {
+      document.getElementById('verification-info-modal').style.display = 'flex';
+    }
+    function closeVerificationModal() {
+      document.getElementById('verification-info-modal').style.display = 'none';
+    }
+  </script>
+
+  <!-- Application Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/app.js"></script>
+
+</body>
+</html>
